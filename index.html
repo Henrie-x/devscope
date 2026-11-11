@@ -1,0 +1,420 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="description"
+    content="DEVFINDER — search GitHub developers and explore their profiles, statistics and repositories."
+  >
+
+  <meta name="theme-color" content="#08090b">
+
+  <title>DEVFINDER — GitHub Developer Search</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+
+      <a class="brand" href="./" aria-label="DEVFINDER home">
+        <span class="brand-mark">D</span>
+        <span class="brand-name">DEVFINDER</span>
+      </a>
+
+      <p class="header-tag">GitHub developer search</p>
+
+    </div>
+  </header>
+
+  <main class="container main">
+
+    <!-- SEARCH -->
+    <section class="search-panel" aria-labelledby="searchTitle">
+
+      <p class="eyebrow">DEVELOPER DIRECTORY</p>
+
+      <h1 id="searchTitle" class="search-title">
+        Find a developer
+      </h1>
+
+      <p class="search-subtitle">
+        Explore GitHub profiles, statistics and public repositories.
+      </p>
+
+      <form id="searchForm" class="search-form" role="search">
+
+        <label for="usernameInput" class="visually-hidden">
+          GitHub username
+        </label>
+
+        <div class="search-field">
+          <input
+            id="usernameInput"
+            class="search-input"
+            type="text"
+            name="username"
+            placeholder="Enter a GitHub username"
+            autocomplete="off"
+            autocapitalize="none"
+            spellcheck="false"
+            required
+          >
+        </div>
+
+        <button
+          id="searchButton"
+          class="btn btn-primary"
+          type="submit"
+        >
+          Search
+        </button>
+
+      </form>
+
+    </section>
+
+
+    <!-- SAVED DEVELOPERS -->
+    <section
+      id="savedSection"
+      class="card saved-section"
+      aria-labelledby="savedTitle"
+    >
+
+      <header class="card-head">
+
+        <div>
+          <h2 id="savedTitle" class="card-title">
+            Saved developers
+          </h2>
+
+          <p class="saved-subtitle">
+            Your bookmarked GitHub profiles
+          </p>
+        </div>
+
+        <span id="savedCount" class="card-meta">
+          0 saved
+        </span>
+
+      </header>
+
+      <div id="savedList" class="saved-list"></div>
+
+      <p id="savedEmpty" class="saved-empty">
+        No saved developers yet.
+      </p>
+
+    </section>
+
+
+    <!-- EMPTY STATE -->
+    <section
+      id="emptyState"
+      class="state state-empty"
+      aria-labelledby="emptyTitle"
+    >
+
+      <span class="state-mark">DF</span>
+
+      <h2 id="emptyTitle" class="state-title">
+        No developer selected
+      </h2>
+
+      <p class="state-text">
+        Enter a GitHub username above to explore their profile.
+      </p>
+
+    </section>
+
+
+    <!-- LOADING STATE -->
+    <section
+      id="loadingState"
+      class="state state-loading"
+      role="status"
+      aria-live="polite"
+      hidden
+    >
+
+      <span class="spinner" aria-hidden="true"></span>
+
+      <p id="loadingText" class="state-text">
+        Loading developer profile...
+      </p>
+
+    </section>
+
+
+    <!-- ERROR STATE -->
+    <section
+      id="errorState"
+      class="state state-error"
+      role="alert"
+      hidden
+    >
+
+      <span class="error-code">ERROR</span>
+
+      <h2 id="errorTitle" class="state-title">
+        Couldn't load this developer
+      </h2>
+
+      <p id="errorMessage" class="state-text">
+        Check the username and try again.
+      </p>
+
+    </section>
+
+
+    <!-- PROFILE DASHBOARD -->
+    <section
+      id="profileSection"
+      class="profile"
+      aria-label="Developer profile"
+      hidden
+    >
+
+      <div class="profile-side">
+
+        <!-- PROFILE CARD -->
+        <article class="card profile-card">
+
+          <div class="profile-identity">
+
+            <img
+              id="profileAvatar"
+              class="profile-avatar"
+              alt="Developer avatar"
+              width="88"
+              height="88"
+            >
+
+            <div class="profile-names">
+
+              <h2 id="profileName" class="profile-name"></h2>
+
+              <p id="profileUsername" class="profile-username"></p>
+
+            </div>
+
+          </div>
+
+          <p id="profileBio" class="profile-bio"></p>
+
+          <div class="profile-actions">
+
+            <a
+              id="profileLink"
+              class="btn btn-secondary profile-link"
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View GitHub profile ↗
+            </a>
+
+            <button
+              id="saveDeveloperBtn"
+              class="btn btn-secondary"
+              type="button"
+            >
+              Save developer
+            </button>
+
+          </div>
+
+        </article>
+
+
+        <!-- DEVELOPER DETAILS -->
+        <article
+          class="card details-card"
+          aria-labelledby="detailsTitle"
+        >
+
+          <header class="card-head">
+            <h3 id="detailsTitle" class="card-title">
+              Developer details
+            </h3>
+          </header>
+
+          <dl class="details-list">
+
+            <div class="details-item" id="locationItem">
+              <dt class="details-label">Location</dt>
+              <dd id="profileLocation" class="details-value"></dd>
+            </div>
+
+            <div class="details-item" id="companyItem">
+              <dt class="details-label">Company</dt>
+              <dd id="profileCompany" class="details-value"></dd>
+            </div>
+
+            <div class="details-item" id="blogItem">
+              <dt class="details-label">Website</dt>
+
+              <dd class="details-value">
+                <a
+                  id="profileBlog"
+                  class="details-link"
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                ></a>
+              </dd>
+            </div>
+
+            <div class="details-item" id="twitterItem">
+              <dt class="details-label">Twitter</dt>
+
+              <dd class="details-value">
+                <a
+                  id="profileTwitter"
+                  class="details-link"
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                ></a>
+              </dd>
+            </div>
+
+          </dl>
+
+        </article>
+
+      </div>
+
+
+      <!-- PROFILE MAIN -->
+      <div class="profile-main">
+
+        <!-- STATISTICS -->
+        <ul class="stats" aria-label="Developer statistics">
+
+          <li class="card stat-card">
+            <div class="stat-head">
+              <span class="stat-label">Repositories</span>
+            </div>
+
+            <p id="repoCount" class="stat-value"></p>
+          </li>
+
+          <li class="card stat-card">
+            <div class="stat-head">
+              <span class="stat-label">Followers</span>
+            </div>
+
+            <p id="followerCount" class="stat-value"></p>
+          </li>
+
+          <li class="card stat-card">
+            <div class="stat-head">
+              <span class="stat-label">Following</span>
+            </div>
+
+            <p id="followingCount" class="stat-value"></p>
+          </li>
+
+        </ul>
+
+
+        <!-- REPOSITORIES -->
+        <section
+          id="reposSection"
+          class="card repos-card"
+          aria-labelledby="reposTitle"
+        >
+
+          <header class="card-head">
+
+            <h3 id="reposTitle" class="card-title">
+              Repositories
+            </h3>
+
+            <span class="card-meta">Latest 6</span>
+
+          </header>
+
+          <ul id="repoList" class="repo-grid"></ul>
+
+          <p id="repoEmpty" class="repo-empty" hidden>
+            This developer has no public repositories.
+          </p>
+
+        </section>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>Built with the public GitHub API.</p>
+    </div>
+  </footer>
+
+
+  <!-- REPOSITORY TEMPLATE -->
+  <template id="repoCardTemplate">
+
+    <li class="repo-card">
+
+      <div class="repo-top">
+        <a
+          class="repo-name"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+        ></a>
+      </div>
+
+      <p class="repo-description"></p>
+
+      <div class="repo-meta">
+
+        <span class="repo-language">
+          <span
+            class="repo-language-dot"
+            aria-hidden="true"
+          ></span>
+
+          <span class="repo-language-name"></span>
+        </span>
+
+        <span class="repo-stat repo-stars">
+          <span class="repo-stat-label">Stars</span>
+          <span class="repo-stars-count"></span>
+        </span>
+
+        <span class="repo-stat repo-forks">
+          <span class="repo-stat-label">Forks</span>
+          <span class="repo-forks-count"></span>
+        </span>
+
+      </div>
+
+    </li>
+
+  </template>
+<script src="main.js"></script>
+</body>
+</html>
